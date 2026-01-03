@@ -11,10 +11,9 @@ jobs:
 
       - name: Build Aria2 Win64
         run: |
-          # 使用官方 Mingw Dockerfile 进行交叉编译
-          docker build -t aria2-builder -f Dockerfile.mingw .
+          # 增加 --build-arg HOST=x86_64-w64-mingw32 来指定 64 位编译
+          docker build --build-arg HOST=x86_64-w64-mingw32 -t aria2-builder -f Dockerfile.mingw .
           
-          # 提取编译好的 exe
           CONTAINER_ID=$(docker create aria2-builder)
           docker cp $CONTAINER_ID:/aria2/src/aria2c.exe ./aria2c.exe
           docker rm $CONTAINER_ID
