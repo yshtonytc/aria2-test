@@ -1215,7 +1215,7 @@ std::vector<OptionHandler*> OptionHandlerFactory::createOptionHandlers()
   }
   {
     OptionHandler* op(new DefaultOptionHandler(
-        PREF_USER_AGENT, TEXT_USER_AGENT, "aria2/" PACKAGE_VERSION, A2STR::NIL,
+      PREF_USER_AGENT, TEXT_USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36", A2STR::NIL,
         OptionHandler::REQ_ARG, 'U'));
     op->addTag(TAG_HTTP);
     op->setInitialOption(true);
