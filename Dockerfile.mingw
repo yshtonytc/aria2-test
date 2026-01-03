@@ -105,10 +105,16 @@ RUN tar xf libssh2-1.11.0.tar.bz2 && \
         LIBS="-lws2_32" && \
     make -j$(nproc) install
 
-ARG ARIA2_VERSION=master
-ARG ARIA2_REF=refs/heads/master
+# --- 修改后的部分 ---
 
-ADD https://api.github.com/repos/aria2/aria2/git/$ARIA2_REF version.json
-RUN git clone -b $ARIA2_VERSION --depth 1 https://github.com/aria2/aria2 && \
-    cd aria2 && autoreconf -i && ./mingw-config && make -j$(nproc) && \
+# 1. 把当前仓库（你修改过代码的 Fork 仓库）的所有文件复制到镜像的 /aria2 目录
+COPY . /aria2
+
+# 2. 切换到该目录
+WORKDIR /aria2
+
+# 3. 开始编译你修改后的代码
+RUN autoreconf -i && \
+    ./mingw-config && \
+    make -j$(nproc) && \
     $HOST-strip src/aria2c.exe
