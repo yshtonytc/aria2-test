@@ -1,0 +1,26 @@
+name: Win64_Build
+
+on:
+  workflow_dispatch: # 手动点击运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Aria2 Win64
+        run: |
+          # 使用官方 Mingw Dockerfile 进行交叉编译
+          docker build -t aria2-builder -f Dockerfile.mingw .
+          
+          # 提取编译好的 exe
+          CONTAINER_ID=$(docker create aria2-builder)
+          docker cp $CONTAINER_ID:/aria2/src/aria2c.exe ./aria2c.exe
+          docker rm $CONTAINER_ID
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: aria2-custom-win64
+          path: aria2c.exe
